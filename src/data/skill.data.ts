@@ -3,25 +3,25 @@ import type { SkillItems } from "#/@types/skills.type";
 export const skillItems: SkillItems = [
   {
     name: "Listening",
-    img: "https://learntestuse.vn/wp-content/uploads/2025/10/Gemini_Generated_Image_los7w1los7w1los7.png",
+    img: "/listening-1024.png",
     alt: "listening-image",
     url: "/skills/listening",
   },
   {
     name: "Speaking",
-    img: "https://learntestuse.vn/wp-content/uploads/2025/10/Gemini_Generated_Image_los7w1los7w1los7-1.png",
+    img: "/speaking_1024.png",
     alt: "speaking-image",
     url: "/skills/speaking",
   },
   {
     name: "Reading",
-    img: "https://learntestuse.vn/wp-content/uploads/2025/10/Gemini_Generated_Image_los7w1los7w1los7-2.png",
+    img: "reading-1024.png",
     alt: "reading-image",
     url: "/skills/reading",
   },
   {
     name: "Writing",
-    img: "https://learntestuse.vn/wp-content/uploads/2025/10/Gemini_Generated_Image_pgraskpgraskpgra.png",
+    img: "writing_1024.png",
     alt: "writing-image",
     url: "/skills/writing",
   },
