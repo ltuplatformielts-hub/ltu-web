@@ -1,4 +1,5 @@
 import type { ExamItems } from "#/@types/exam.type";
+import ExamPagination from "#/components/ExamPagination";
 import SkillList from "#/components/skills/SkillList";
 import { Button } from "#/components/ui/button";
 import {
@@ -102,24 +103,23 @@ export const Route = createFileRoute("/demo/skills")({
 
 function RouteComponent() {
   const data: ExamItems = Route.useLoaderData();
+  console.log(data.exam);
 
   return (
     <>
       <div className="px-4 py-2 h-content">
         {(data.exam.length === 0 && (
-          <div className="text-center h-content flex flex-col items-center justify-center gap-4">
-            <div className="space-y-1">
+          <div className="text-center h-content flex flex-col items-center justify-center gap-8">
+            <div className="-space-y-1">
               <div className="flex justify-center items-center gap-0.5">
                 <SearchXIcon className="text-muted-foreground" />
-                <h1 className="font-semibold">No tests available.</h1>
+                <h1 className="font-semibold text-lg">No tests available.</h1>
               </div>
               <p className="text-sm text-muted-foreground">
                 Please check back later or try a different category.
               </p>
             </div>
-            <div>
-              <SkillList />
-            </div>
+            <SkillList />
           </div>
         )) || (
           <ul className="basic-grid">
@@ -132,6 +132,14 @@ function RouteComponent() {
               return (
                 <li key={test.id}>
                   <Card>
+                    <CardContent>
+                      <img
+                        src={test.img}
+                        alt={test.name}
+                        loading="lazy"
+                        className="w-full h-44 object-cover rounded-t-md"
+                      />
+                    </CardContent>
                     <CardHeader className="py-0">
                       <CardTitle className="py-0">{test.name}</CardTitle>
                     </CardHeader>
@@ -145,6 +153,7 @@ function RouteComponent() {
             })}
           </ul>
         )}
+        <ExamPagination page={data.page} totalPage={data.totalPage} />
       </div>
     </>
   );

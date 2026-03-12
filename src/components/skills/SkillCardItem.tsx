@@ -19,7 +19,7 @@ function SkillCardItem({ item }: { item: SkillItem }) {
               <LazyLoadImage
                 src={item.img}
                 alt={item.alt}
-                className="w-full h-auto object-contain transition-opacity duration-500"
+                className="w-full h-44 object-contain transition-opacity duration-500"
                 onLoad={(e) => (e.currentTarget.style.opacity = "1")}
                 style={{ opacity: 0 }}
               />
