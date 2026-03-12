@@ -1,5 +1,8 @@
-import type { ExamItems } from "#/@types/exam.type";
+import type { ExamItems, ExamType } from "#/@types/exam.type";
+import type { SortItem } from "#/@types/sort.type";
 import ExamPagination from "#/components/ExamPagination";
+import SortList from "#/components/filters/SortList";
+import TypeSort from "#/components/filters/TypeSort";
 import SkillList from "#/components/skills/SkillList";
 import { Button } from "#/components/ui/button";
 import {
@@ -13,10 +16,11 @@ import {
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeftIcon, HomeIcon, RotateCw, SearchXIcon } from "lucide-react";
 
-interface ExamFilters {
-  type?: "LISTENING" | "READING" | "WRITING" | "SPEAKING";
+export interface ExamFilters {
+  type?: ExamType;
   page?: number;
   search?: string;
+  sort?: SortItem["value"];
 }
 
 export const Route = createFileRoute("/demo/skills")({
@@ -50,20 +54,29 @@ export const Route = createFileRoute("/demo/skills")({
 
     if (search.type) filters.type = search.type as ExamFilters["type"];
     if (search.search) filters.search = search.search as string;
-
+    if (search.sort) filters.sort = search.sort as ExamFilters["sort"];
     const page = Number(search.page) || 1;
     filters.page = page;
 
     return filters;
   },
-  loader: async ({ search }) => {
-    const { page, type, search: searchKey = "" } = search || {};
-    const queryParams = new URLSearchParams();
+  loader: async ({ location }) => {
+    // const { page, type, search: searchKey = "" } = search || {};
+    // const queryParams = new URLSearchParams();
 
-    if (page) queryParams.append("page", page);
-    if (searchKey && searchKey !== "undefined")
-      queryParams.append("search", searchKey);
+    // if (page) queryParams.append("page", page);
+    // if (searchKey && searchKey !== "undefined")
+    //   queryParams.append("search", searchKey);
+    // if (type) queryParams.append("type", type);
+    const params = location.search as ExamFilters;
+
+    const { page = 1, search = "", type, sort } = params;
+
+    const queryParams = new URLSearchParams();
+    if (page) queryParams.append("page", page.toString());
     if (type) queryParams.append("type", type);
+    if (search) queryParams.append("search", search);
+    if (sort) queryParams.append("sort", sort);
 
     const res = await fetch(`http://localhost:4000/api/v1/exam?${queryParams}`);
 
@@ -103,11 +116,14 @@ export const Route = createFileRoute("/demo/skills")({
 
 function RouteComponent() {
   const data: ExamItems = Route.useLoaderData();
-  console.log(data.exam);
 
   return (
     <>
-      <div className="px-4 py-2 h-content">
+      <div className="px-4 py-2 h-content flex flex-col">
+        <div className="py-4 flex justify-end items-center gap-1">
+          <TypeSort />
+          <SortList />
+        </div>
         {(data.exam.length === 0 && (
           <div className="text-center h-content flex flex-col items-center justify-center gap-8">
             <div className="-space-y-1">
@@ -153,7 +169,7 @@ function RouteComponent() {
             })}
           </ul>
         )}
-        <ExamPagination page={data.page} totalPage={data.totalPage} />
+        <ExamPagination page={data.page} totalPage={data.totalPage} className="mt-auto" />
       </div>
     </>
   );

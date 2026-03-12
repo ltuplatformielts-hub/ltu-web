@@ -15,13 +15,13 @@ export const skillItems: SkillItems = [
   },
   {
     name: "Reading",
-    img: "reading-1024.png",
+    img: "/reading-1024.png",
     alt: "reading-image",
     url: "/demo/skills",
   },
   {
     name: "Writing",
-    img: "writing_1024.png",
+    img: "/writing_1024.png",
     alt: "writing-image",
     url: "/demo/skills",
   },

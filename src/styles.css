@@ -143,7 +143,7 @@
   }
 
   .h-content {
-    @apply h-[calc(100dvh-61px)];
+    @apply min-h-[calc(100dvh-61px)];
   }
 
   .basic-grid {

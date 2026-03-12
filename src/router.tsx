@@ -1,7 +1,6 @@
-import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { createRouter as createTanStackRouter, Link } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { Button } from "./components/ui/button";
-import { Link } from "lucide-react";
 
 export function getRouter() {
   const router = createTanStackRouter({

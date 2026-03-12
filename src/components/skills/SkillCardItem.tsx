@@ -1,7 +1,6 @@
 import type { SkillItem } from "#/@types/skills.type";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Link } from "@tanstack/react-router";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function SkillCardItem({ item }: { item: SkillItem }) {
   return (
@@ -16,10 +15,11 @@ function SkillCardItem({ item }: { item: SkillItem }) {
         >
           <Card className="hover:shadow-lg dark:shadow-accent smooth">
             <CardContent>
-              <LazyLoadImage
+              <img
                 src={item.img}
                 alt={item.alt}
                 className="w-full h-44 object-contain transition-opacity duration-500"
+                loading="lazy"
                 onLoad={(e) => (e.currentTarget.style.opacity = "1")}
                 style={{ opacity: 0 }}
               />
