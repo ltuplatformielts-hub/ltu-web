@@ -11,10 +11,10 @@ function Auth({ postion }: { postion: keyof typeof currentPosition }) {
   return (
     <>
       <div className={cn("flex items-center gap-1", currentPosition[postion])}>
-        <Link to="/login">
+        <Link to="/demo/login">
           <Button variant="secondary">Login</Button>
         </Link>
-        <Link to="/register">
+        <Link to="/demo/register">
           <Button>Register</Button>
         </Link>
       </div>

@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "#/components/ui/card";
@@ -15,7 +14,7 @@ import { Spinner } from "#/components/ui/spinner";
 import { usePasswordHook } from "#/hooks/usePassword";
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChromeIcon, EyeClosedIcon, EyeIcon } from "lucide-react";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 
 export const Route = createFileRoute("/demo/login")({
   component: RouteComponent,
@@ -116,9 +115,9 @@ function RouteComponent() {
                     </div>
                   )}
                 />
-                <Link to="/reset-password" className="text-primary">
-                  Forgot password?
-                </Link>
+                {/* <Link to="/reset-password" className="text-primary"> */}
+                <Button variant="link">Forgot password?</Button>
+                {/* </Link> */}
               </div>
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
