@@ -1,4 +1,5 @@
 import type { ExamItems } from "#/@types/exam.type";
+import SkillList from "#/components/skills/SkillList";
 import { Button } from "#/components/ui/button";
 import {
   Card,
@@ -9,7 +10,7 @@ import {
   CardTitle,
 } from "#/components/ui/card";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, HomeIcon, RotateCw } from "lucide-react";
+import { ArrowLeftIcon, HomeIcon, RotateCw, SearchXIcon } from "lucide-react";
 
 interface ExamFilters {
   type?: "LISTENING" | "READING" | "WRITING" | "SPEAKING";
@@ -64,9 +65,7 @@ export const Route = createFileRoute("/demo/skills")({
     if (type) queryParams.append("type", type);
 
     const res = await fetch(`http://localhost:4000/api/v1/exam?${queryParams}`);
-    // const res = await fetch(`http://localhost:4000/api/v1/error-test-500`);
 
-    // if (!res.ok) return { exam: [], total: 0 };
     if (!res.ok) {
       // Ép ném ra lỗi để kích hoạt errorComponent
       throw new Error(`Failed to fetch exams: ${res.status} ${res.statusText}`);
@@ -107,28 +106,45 @@ function RouteComponent() {
   return (
     <>
       <div className="px-4 py-2 h-content">
-        <ul className="basic-grid">
-          {data.exam.map((test) => {
-            const date = new Date(test.createdAt).toLocaleDateString("vi", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            });
-            return (
-              <li key={test.id}>
-                <Card>
-                  <CardHeader className="py-0">
-                    <CardTitle className="py-0">{test.name}</CardTitle>
-                  </CardHeader>
-                  <CardFooter className="justify-between py-0">
-                    <CardDescription>{date}</CardDescription>
-                    <Button>Enroll now</Button>
-                  </CardFooter>
-                </Card>
-              </li>
-            );
-          })}
-        </ul>
+        {(data.exam.length === 0 && (
+          <div className="text-center h-content flex flex-col items-center justify-center gap-4">
+            <div className="space-y-1">
+              <div className="flex justify-center items-center gap-0.5">
+                <SearchXIcon className="text-muted-foreground" />
+                <h1 className="font-semibold">No tests available.</h1>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Please check back later or try a different category.
+              </p>
+            </div>
+            <div>
+              <SkillList />
+            </div>
+          </div>
+        )) || (
+          <ul className="basic-grid">
+            {data.exam.map((test) => {
+              const date = new Date(test.createdAt).toLocaleDateString("vi", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              });
+              return (
+                <li key={test.id}>
+                  <Card>
+                    <CardHeader className="py-0">
+                      <CardTitle className="py-0">{test.name}</CardTitle>
+                    </CardHeader>
+                    <CardFooter className="justify-between py-0">
+                      <CardDescription>{date}</CardDescription>
+                      <Button>Enroll now</Button>
+                    </CardFooter>
+                  </Card>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </>
   );
