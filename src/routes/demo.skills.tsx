@@ -3,18 +3,11 @@ import type { SortItem } from "#/@types/sort.type";
 import ExamPagination from "#/components/ExamPagination";
 import SortList from "#/components/filters/SortList";
 import TypeSort from "#/components/filters/TypeSort";
-import SkillList from "#/components/skills/SkillList";
 import { Button } from "#/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "#/components/ui/card";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, HomeIcon, RotateCw, SearchXIcon } from "lucide-react";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { ArrowLeftIcon, HomeIcon, RotateCw } from "lucide-react";
+import { ExamEmpty } from "#/components/exam/ExamEmpty";
+import ExamCardItem from "#/components/exam/ExamItemFn";
 
 export interface ExamFilters {
   type?: ExamType;
@@ -61,13 +54,6 @@ export const Route = createFileRoute("/demo/skills")({
     return filters;
   },
   loader: async ({ location }) => {
-    // const { page, type, search: searchKey = "" } = search || {};
-    // const queryParams = new URLSearchParams();
-
-    // if (page) queryParams.append("page", page);
-    // if (searchKey && searchKey !== "undefined")
-    //   queryParams.append("search", searchKey);
-    // if (type) queryParams.append("type", type);
     const params = location.search as ExamFilters;
 
     const { page = 1, search = "", type, sort } = params;
@@ -79,6 +65,8 @@ export const Route = createFileRoute("/demo/skills")({
     if (sort) queryParams.append("sort", sort);
 
     const res = await fetch(`http://localhost:4000/api/v1/exam?${queryParams}`);
+
+    if (res.status === 401) throw redirect({ to: "/demo/login" });
 
     if (!res.ok) {
       // Ép ném ra lỗi để kích hoạt errorComponent
@@ -124,52 +112,20 @@ function RouteComponent() {
           <TypeSort />
           <SortList />
         </div>
-        {(data.exam.length === 0 && (
-          <div className="text-center h-content flex flex-col items-center justify-center gap-8">
-            <div className="-space-y-1">
-              <div className="flex justify-center items-center gap-0.5">
-                <SearchXIcon className="text-muted-foreground" />
-                <h1 className="font-semibold text-lg">No tests available.</h1>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Please check back later or try a different category.
-              </p>
-            </div>
-            <SkillList />
-          </div>
-        )) || (
+        {data.exam.length === 0 ? (
+          <ExamEmpty />
+        ) : (
           <ul className="basic-grid">
-            {data.exam.map((test) => {
-              const date = new Date(test.createdAt).toLocaleDateString("vi", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              });
-              return (
-                <li key={test.id}>
-                  <Card>
-                    <CardContent>
-                      <img
-                        src={test.img}
-                        alt={test.name}
-                        loading="lazy"
-                        className="w-full h-44 object-cover rounded-t-md"
-                      />
-                    </CardContent>
-                    <CardHeader className="py-0">
-                      <CardTitle className="py-0">{test.name}</CardTitle>
-                    </CardHeader>
-                    <CardFooter className="justify-between py-0">
-                      <CardDescription>{date}</CardDescription>
-                      <Button>Enroll now</Button>
-                    </CardFooter>
-                  </Card>
-                </li>
-              );
-            })}
+            {data.exam.map((test) => (
+              <ExamCardItem key={test.id} test={test} />
+            ))}
           </ul>
         )}
-        <ExamPagination page={data.page} totalPage={data.totalPage} className="mt-auto" />
+        <ExamPagination
+          page={data.page}
+          totalPage={data.totalPage}
+          className="mt-auto"
+        />
       </div>
     </>
   );

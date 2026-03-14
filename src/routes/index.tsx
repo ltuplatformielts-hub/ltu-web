@@ -7,6 +7,7 @@ export const Route = createFileRoute("/")({
   component: App,
   errorComponent: ({ error }) => {
     return (
+      
       <div className="px-4 py-2 flex flex-col justify-center items-center gap-8 h-content">
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-destructive">
@@ -34,11 +35,13 @@ export const Route = createFileRoute("/")({
 
 function App() {
   return (
+    <>
     <main className="page-wrap px-4 pb-8 pt-14">
       <section className="space-y-4">
         <h2 className="font-semibold text-lg">Skills</h2>
         <SkillList />
       </section>
     </main>
+    </>
   );
 }

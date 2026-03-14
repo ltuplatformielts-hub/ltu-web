@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRoomRouteImport } from './routes/test-room'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestRoomTestRouteImport } from './routes/test-room.test'
 import { Route as DemoUploadRouteImport } from './routes/demo.upload'
 import { Route as DemoSkillsRouteImport } from './routes/demo.skills'
 import { Route as DemoRegisterRouteImport } from './routes/demo.register'
@@ -18,6 +20,11 @@ import { Route as DemoLoginRouteImport } from './routes/demo.login'
 import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
 import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
 
+const TestRoomRoute = TestRoomRouteImport.update({
+  id: '/test-room',
+  path: '/test-room',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -27,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TestRoomTestRoute = TestRoomTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => TestRoomRoute,
 } as any)
 const DemoUploadRoute = DemoUploadRouteImport.update({
   id: '/demo/upload',
@@ -62,20 +74,24 @@ const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/test-room': typeof TestRoomRouteWithChildren
   '/demo/login': typeof DemoLoginRoute
   '/demo/register': typeof DemoRegisterRoute
   '/demo/skills': typeof DemoSkillsRoute
   '/demo/upload': typeof DemoUploadRoute
+  '/test-room/test': typeof TestRoomTestRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/test-room': typeof TestRoomRouteWithChildren
   '/demo/login': typeof DemoLoginRoute
   '/demo/register': typeof DemoRegisterRoute
   '/demo/skills': typeof DemoSkillsRoute
   '/demo/upload': typeof DemoUploadRoute
+  '/test-room/test': typeof TestRoomTestRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
 }
@@ -83,10 +99,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/test-room': typeof TestRoomRouteWithChildren
   '/demo/login': typeof DemoLoginRoute
   '/demo/register': typeof DemoRegisterRoute
   '/demo/skills': typeof DemoSkillsRoute
   '/demo/upload': typeof DemoUploadRoute
+  '/test-room/test': typeof TestRoomTestRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
 }
@@ -95,30 +113,36 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/test-room'
     | '/demo/login'
     | '/demo/register'
     | '/demo/skills'
     | '/demo/upload'
+    | '/test-room/test'
     | '/demo/form/address'
     | '/demo/form/simple'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/test-room'
     | '/demo/login'
     | '/demo/register'
     | '/demo/skills'
     | '/demo/upload'
+    | '/test-room/test'
     | '/demo/form/address'
     | '/demo/form/simple'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/test-room'
     | '/demo/login'
     | '/demo/register'
     | '/demo/skills'
     | '/demo/upload'
+    | '/test-room/test'
     | '/demo/form/address'
     | '/demo/form/simple'
   fileRoutesById: FileRoutesById
@@ -126,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  TestRoomRoute: typeof TestRoomRouteWithChildren
   DemoLoginRoute: typeof DemoLoginRoute
   DemoRegisterRoute: typeof DemoRegisterRoute
   DemoSkillsRoute: typeof DemoSkillsRoute
@@ -136,6 +161,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test-room': {
+      id: '/test-room'
+      path: '/test-room'
+      fullPath: '/test-room'
+      preLoaderRoute: typeof TestRoomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -149,6 +181,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/test-room/test': {
+      id: '/test-room/test'
+      path: '/test'
+      fullPath: '/test-room/test'
+      preLoaderRoute: typeof TestRoomTestRouteImport
+      parentRoute: typeof TestRoomRoute
     }
     '/demo/upload': {
       id: '/demo/upload'
@@ -195,9 +234,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface TestRoomRouteChildren {
+  TestRoomTestRoute: typeof TestRoomTestRoute
+}
+
+const TestRoomRouteChildren: TestRoomRouteChildren = {
+  TestRoomTestRoute: TestRoomTestRoute,
+}
+
+const TestRoomRouteWithChildren = TestRoomRoute._addFileChildren(
+  TestRoomRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  TestRoomRoute: TestRoomRouteWithChildren,
   DemoLoginRoute: DemoLoginRoute,
   DemoRegisterRoute: DemoRegisterRoute,
   DemoSkillsRoute: DemoSkillsRoute,

@@ -63,14 +63,14 @@ function RouteComponent() {
       setLoading("loading");
       toast.info("Logging in...");
       try {
-        const { identicator, password } = value;
+        const { identicator, password, isRemember } = value;
         console.log(import.meta.env.VITE_API_URL);
         const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ identicator, password }),
+          body: JSON.stringify({ identicator, password, isRemember }),
           credentials: "include",
         });
 
@@ -90,7 +90,7 @@ function RouteComponent() {
           const errMsg = data.message;
           toast.error(errMsg);
           setLoading("fail");
-          throw new Error(errMsg);
+          return errMsg
         }
 
         toast.success(data.message);
