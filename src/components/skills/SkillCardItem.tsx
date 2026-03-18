@@ -2,10 +2,10 @@ import type { SkillItem } from "#/@types/skills.type";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Link } from "@tanstack/react-router";
 
-function SkillCardItem({ item }: { item: SkillItem }) {
+function SkillCardItem({ item, index }: { item: SkillItem; index: number }) {
   return (
     <>
-      <li key={item.name} className="group">
+      <li className="group">
         <Link
           to={item.url}
           search={{
@@ -19,9 +19,8 @@ function SkillCardItem({ item }: { item: SkillItem }) {
                 src={item.img}
                 alt={item.alt}
                 className="w-full h-44 object-contain transition-opacity duration-500"
-                loading="lazy"
+                loading={index > 3 ? "lazy" : "eager"}
                 onLoad={(e) => (e.currentTarget.style.opacity = "1")}
-                style={{ opacity: 0 }}
               />
             </CardContent>
             <CardHeader>

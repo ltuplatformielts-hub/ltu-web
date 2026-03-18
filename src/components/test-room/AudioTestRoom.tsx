@@ -16,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import formatTime from "#/lib/formatTime";
 
 function AudioTestRoom({ audioUrl }: { audioUrl: string }) {
   const playerRef = useRef<HTMLAudioElement | null>(null);
@@ -80,13 +81,6 @@ function AudioTestRoom({ audioUrl }: { audioUrl: string }) {
       playerRef.current.currentTime = newTime;
       setCurrentTime(newTime);
     }
-  };
-
-  const formatTime = (time: number) => {
-    const min = Math.floor(time / 60);
-    const sec = Math.floor(time % 60);
-    const formattedSec = sec.toString().padStart(2, "0");
-    return `${min}:${formattedSec}`;
   };
 
   useEffect(() => {
@@ -160,7 +154,7 @@ function AudioTestRoom({ audioUrl }: { audioUrl: string }) {
           />
           <div className="flex items-center gap-1.5 w-40">
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="secondary"
                   size="icon-sm"

@@ -1,5 +1,5 @@
 import { cn } from "#/lib/utils";
-import CustomePagination from "./CustomePagination";
+import CustomePagination from "../CustomePagination";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useCallback, useEffect } from "react";
 

@@ -1,13 +1,13 @@
 import type { ExamItems, ExamType } from "#/@types/exam.type";
 import type { SortItem } from "#/@types/sort.type";
-import ExamPagination from "#/components/ExamPagination";
+import ExamPagination from "#/components/paginations/ExamPagination";
 import SortList from "#/components/filters/SortList";
 import TypeSort from "#/components/filters/TypeSort";
 import { Button } from "#/components/ui/button";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { ArrowLeftIcon, HomeIcon, RotateCw } from "lucide-react";
 import { ExamEmpty } from "#/components/exam/ExamEmpty";
-import ExamCardItem from "#/components/exam/ExamItemFn";
+import ExamCardItem from "#/components/exam/ExamCardItem";
 
 export interface ExamFilters {
   type?: ExamType;
@@ -104,6 +104,8 @@ export const Route = createFileRoute("/demo/skills")({
 
 function RouteComponent() {
   const data: ExamItems = Route.useLoaderData();
+  const { exams, page, totalPage } = data;
+
 
   return (
     <>
@@ -112,20 +114,16 @@ function RouteComponent() {
           <TypeSort />
           <SortList />
         </div>
-        {data.exam.length === 0 ? (
+        {exams.length === 0 ? (
           <ExamEmpty />
         ) : (
           <ul className="basic-grid">
-            {data.exam.map((test) => (
+            {exams.map((test) => (
               <ExamCardItem key={test.id} test={test} />
             ))}
           </ul>
         )}
-        <ExamPagination
-          page={data.page}
-          totalPage={data.totalPage}
-          className="mt-auto"
-        />
+        <ExamPagination page={page} totalPage={totalPage} className="mt-auto" />
       </div>
     </>
   );

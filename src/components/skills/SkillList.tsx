@@ -5,8 +5,8 @@ function SkillList() {
   return (
     <>
       <ul className="basic-grid">
-        {skillItems.map((skill) => (
-          <SkillCardItem key={skill.alt} item={skill} />
+        {skillItems.map((skill, index) => (
+          <SkillCardItem key={skill.alt} item={skill} index={index} />
         ))}
       </ul>
     </>

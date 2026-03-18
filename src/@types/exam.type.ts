@@ -9,7 +9,7 @@ export interface ExamItem {
 
 export interface ExamItems {
   message: string;
-  exam: ExamItem[];
+  exams: ExamItem[];
   page: number;
   totalPage: number;
 }
@@ -26,6 +26,11 @@ export interface QuestionItem {
   correctAnswer: CorrectAnswer[];
 }
 
+export interface SectionItem {
+  section: string;
+  questions: QuestionItem[];
+}
+
 export interface ExamItemDetails {
   id: string;
   name: string;
@@ -33,19 +38,15 @@ export interface ExamItemDetails {
   type: ExamType;
   timeLimit: number;
   audio: string;
+  sections: SectionItem[];
   picture: string[];
-}
-
-export interface SectionItem {
-  section: string;
-  questions: QuestionItem[];
+  totalQuestion: number;
+  totalScore: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ExamItemOne {
   message: string;
   exam: ExamItemDetails;
-  totalQuestion: number;
-  totalScore: number;
-  createdAt: string;
-  updatedAt: string;
 }

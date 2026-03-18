@@ -1,61 +1,42 @@
 import axios from "axios";
-import Cookie from "js-cookie";
-
-const baseURL = import.meta.env.VITE_API_URL;
-
-if (!baseURL) throw new Error("Can not connect to the database.");
 
 const baseApiClient = axios.create({
-  baseURL,
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
+  withCredentials: true, // Bắt buộc để trình duyệt tự gửi cả 2 cookie
 });
 
-baseApiClient.interceptors.request.use(
-  (config) => {
-    const accessToken = Cookie.get("access_token");
-
-    if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
 baseApiClient.interceptors.response.use(
-  (res) => res,
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response.status === 401 && !originalRequest._entry) {
-      originalRequest._entry = true;
-      const refreshToken = Cookie.get("refresh_token");
+    // Nếu lỗi 401 và chưa từng thử refresh cho request này
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-      if (refreshToken) {
-        try {
-          const res = await axios.post(
-            `${baseURL}/auth/me`,
-            { refreshToken },
-            { withCredentials: true },
-          );
+      try {
+        // Gọi API refresh.
+        // Vì có withCredentials: true, trình duyệt sẽ tự mang refresh_token đi.
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/auth/refresh`,
+          {},
+          { withCredentials: true },
+        );
 
-          if (res.status === 201 || res.status === 200) {
-            const newAccessToken = Cookie.get("access_token");
-
-            if (newAccessToken) {
-              originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-              return baseApiClient(originalRequest);
-            }
-          }
-        } catch (error) {
-          Cookie.remove("access_token");
-          Cookie.remove("refresh_token");
-          return Promise.reject(error);
-        }
+        // Sau khi refresh thành công, Backend đã set lại accessToken mới vào Cookie.
+        // Bây giờ chỉ cần thực hiện lại request ban đầu.
+        return baseApiClient(originalRequest);
+      } catch (refreshError) {
+        // Nếu ngay cả refresh token cũng hết hạn (ví dụ sau 7 ngày)
+        // Xóa trạng thái đăng nhập và chuyển về trang Login
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   },
 );
