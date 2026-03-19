@@ -15,7 +15,7 @@ function Auth({ postion }: { postion: keyof typeof currentPosition }) {
   const isLogged = !!user?.user?.id;
   return (
     <>
-      {isLogged && (
+      {!isLogged && (
         <div
           className={cn("flex items-center gap-1", currentPosition[postion])}
         >
