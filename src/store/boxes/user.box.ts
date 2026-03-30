@@ -32,7 +32,7 @@ const initialState = {
 } satisfies UserState as UserState;
 
 export const userBox = createBox(initialState, (set) => ({
-  setUser: (data: UserState) => set(data),
+  setUser: (data: UserState) => set((prev)=>({ ...prev, user: { ...prev.user, ...data } })),
   setLoading: (state: UserState["loading"]) =>
     set((prev) => ({ ...prev, loading: state })),
 }));

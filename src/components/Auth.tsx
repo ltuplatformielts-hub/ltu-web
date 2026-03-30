@@ -11,8 +11,8 @@ const currentPosition = {
 
 function Auth({ postion }: { postion: keyof typeof currentPosition }) {
   const [user] = useAppStore(store.user);
-
   const isLogged = !!user?.user?.id;
+
   return (
     <>
       {!isLogged && (
